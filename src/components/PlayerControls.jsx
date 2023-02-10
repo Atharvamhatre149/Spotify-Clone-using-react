@@ -24,7 +24,7 @@ function PlayerControls() {
              });
              // console.log(response);
              
-             // console.log(playlists);
+             
              if(response.data !==""){
                  const {item}=response.data;
                  const currentlyPlaying={
@@ -38,6 +38,17 @@ function PlayerControls() {
                 }else
             dispatch({type:reducerCases.SET_PLAYING,currentlyPlaying:null});
     };
+
+    const changeState =  async() =>{
+        const state=PlayerState ? "pause" : "play";
+        const response=await axios.put(`https://api.spotify.com/v1/me/player/${state}`,{},{
+            headers:{
+             Authorization: "Bearer "+token,
+             "Content-Type": "application/json",
+            },
+         });
+         dispatch({type: reducerCases.SET_PLAYER_STATE, PlayerState:!PlayerState});
+     };
   return (
     <Container>
         <div className="shuffle">
@@ -47,7 +58,7 @@ function PlayerControls() {
             <CgPlayTrackPrev onClick={()=>changeTrack("previous")}/>
         </div>
         <div className="state">
-            {PlayerState ? <BsFillPauseCircleFill/> : <BsFillPlayCircleFill/> }
+            {PlayerState ? <BsFillPauseCircleFill onClick={changeState}/> : <BsFillPlayCircleFill onClick={changeState}/> }
         </div>
         <div className="next">
             <CgPlayTrackNext onClick={()=>changeTrack("next")}/>
@@ -71,7 +82,7 @@ const Container=styled.div`
         color: #b3b3b3;
         transition: 0.2s ease-in-out;
         &:hover{
-            color: white;
+            color: w hite;
         }
     }
     .state{
